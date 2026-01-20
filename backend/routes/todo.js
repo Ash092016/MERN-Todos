@@ -7,7 +7,7 @@ const {protect}=require('../middleware/auth')
 router.get('/',protect,async (req,res,next)=>{
     try{
         const todos=await Todo.find({userId:req.user._id}).sort({createdAt:-1})
-        res.json(todos)
+        res.json({success:true,data:todos})
     }
     catch(error){
         next(error)
@@ -18,6 +18,10 @@ router.get('/',protect,async (req,res,next)=>{
 router.get('/date/:date',protect,async (req,res,next)=>{
     try{
         const date=new Date(req.params.date)
+        if(isNaN(date.getTime())){
+            res.status(400)
+            throw new Error('Invalid date format')
+        }
         const nextDay=new Date(date)
         nextDay.setDate(nextDay.getDate()+1)
 
@@ -29,7 +33,7 @@ router.get('/date/:date',protect,async (req,res,next)=>{
             },
         }).sort({createdAt:-1})
 
-        res.json(todos)
+        res.json({success:true,data:todos})
     }
     catch(error){
         next(error)
@@ -51,7 +55,7 @@ router.post('/',protect,async (req,res,next)=>{
             title,
             description:description || '',
         })
-        res.status(201).json(todo)
+        res.status(201).json({success:true,data:todo})
     }
     catch(error){
         next(error)
@@ -78,12 +82,12 @@ router.put('/:id',protect,async (req,res,next)=>{
         if(description!==undefined) todo.description=description
 
         if(completed!==undefined){
-            todo.completed=completed
-            todo.completedAt=completed?new Date():null
+            todo.completed=Boolean(completed)
+            todo.completedAt=todo.completed?new Date():null
         }
 
         const updatedTodo=await todo.save()
-        res.json(updatedTodo)
+        res.json({success:true,data:updatedTodo})
     }
     catch(error){
         next(error)
@@ -106,7 +110,7 @@ router.delete('/:id',protect,async (req,res,next)=>{
         }
 
         await todo.deleteOne()
-        res.json({message:'Todo deleted successfully'})
+        res.json({success:true,message:'Todo deleted successfully'})
     }
     catch(error){
         next(error)

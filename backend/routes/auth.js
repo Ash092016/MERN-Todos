@@ -27,7 +27,7 @@ router.post('/signup',async (req,res,next)=>{
         }
 
         //Check if user exists in database
-        const UserExists=await User.findOne({email})
+        const UserExists=await User.findOne({email:email.toLowerCase()})
         if(UserExists){
             res.status(400)
             throw new Error('User already exists')
@@ -35,7 +35,7 @@ router.post('/signup',async (req,res,next)=>{
 
         const user=await User.create({
             name:name,
-            email:email,
+            email:email.toLowerCase(),
             password:password
         })
 
@@ -64,11 +64,11 @@ router.post('/login',async (req,res,next)=>{
         }
 
         //Finding user by email
-        const user=await User.findOne({email})
+        const user=await User.findOne({email:email.toLowerCase()})
 
         //Validating whether user exists and matching the password
         if(user && (await user.matchPassword(password))){
-            res.json({
+            return res.status(200).json({
                  _id: user._id,
                 name: user.name,
                 email: user.email,
