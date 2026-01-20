@@ -15,14 +15,13 @@ const protect=async (req,res,next)=>{
 
             if(!req.user){
                 res.status(401)
-                throw new Error('User not found')
+                return next(new Error('User not found'))
             }
-            next()
-            return 
+            return next()
         }
         catch(error){
             res.status(401)
-            throw new Error('Not authorized, token failed')
+            return next(new Error('Not authorized, token failed'))
         }
     }
     if(!token){
