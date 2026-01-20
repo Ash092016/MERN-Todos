@@ -1,7 +1,7 @@
 //Error Handler middleware which catches and formats the error from all routes 
 
 const errorHandler=(err,req,res,next)=>{
-    let statusCode=res.statusCode===200?res.statusCode:500
+    let statusCode=res.statusCode&&res.statusCode!==200?res.statusCode:500
     let message=err.message
 
     if(err.name==='ValidationError'){
