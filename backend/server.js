@@ -17,7 +17,9 @@ connectDB()
 const app=express()
 
 //Global Middleware
-app.use(cors())
+app.use(cors({
+    origin:process.env.ALLOWED_ORIGIN || '*'
+}))
 app.use(express.json())
 
 //Routes
@@ -32,6 +34,10 @@ app.get('/',(req, res)=>{
 app.use(errorHandler)
 
 const PORT=process.env.PORT||5000
-app.listen(PORT,()=>{
+app.listen(PORT,(err)=>{
+    if(err){
+        console.log('Server failed to start:',err)
+        process.exit(1)
+    }
     console.log(`Server running on port ${PORT}`)
 })

@@ -17,6 +17,8 @@ const UserSchema=new Schema(
             unique:true,
             lowercase:true,
             trim:true,
+            match:[/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        'Please add a valid email address',],
         },
         password:{
             type:String,
