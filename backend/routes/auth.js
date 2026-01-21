@@ -23,7 +23,7 @@ router.post('/signup',async (req,res,next)=>{
 
         if(password.length<6){
             res.status(400)
-            throw new Error('Password must be atleast 6 characters')
+            throw new Error('Password must be at least 6 characters')
         }
 
         //Check if user exists in database
@@ -64,7 +64,7 @@ router.post('/login',async (req,res,next)=>{
         }
 
         //Finding user by email
-        const user=await User.findOne({email:email.toLowerCase()})
+        const user=await User.findOne({email:email.toLowerCase()}).select('+password')
 
         //Validating whether user exists and matching the password
         if(user && (await user.matchPassword(password))){
