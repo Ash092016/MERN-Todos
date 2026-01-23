@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from 'react'
+import { createContext, useContext, useState, useEffect, useMemo, useCallback} from 'react'
 
 const ThemeContext = createContext()
 
@@ -11,34 +11,42 @@ export const useTheme = () => {
 }
 
 export const ThemeProvider = ({ children }) => {
-    const [darkMode, setDarkMode] = useState(false)
+    const [darkMode, setDarkMode] = useState(()=>{
+        try{
+            const savedTheme=localStorage.getItem('theme')
+            if(savedTheme){
+                return savedTheme==='dark'
+            }
+        }
+        catch(error){
+            console.warn('Error reading theme from localStorage:',error)
+        }
+        return window.matchMedia('(prefers-color-scheme:dark)').matches
+    })
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme')
-        if (savedTheme === 'dark') {
-            setDarkMode(true)
+        if(darkMode){
             document.documentElement.classList.add('dark')
+            try{
+                localStorage.setItem('theme','dark')
+            }
+            catch(error){}
         }
-    }, [])
-
-    const toggleTheme = () => {
-        setDarkMode((prev) => {
-            const newMode = !prev
-
-            if (newMode) {
-                document.documentElement.classList.add('dark')
-                localStorage.setItem('theme', 'dark')
+        else{
+            document.documentElement.classList.remove('dark')
+            try{
+                localStorage.setItem('theme','light')
             }
-            else {
-                document.documentElement.classList.remove('dark')
-                localStorage.setItem('theme', 'light')
-            }
-            return newMode
-        })
-    }
+            catch(error){}
+        }
+    }, [darkMode])
+
+    const toggleTheme=useCallback(()=>{
+        setDarkMode(prev=>!prev)
+    },[])
 
     const value=useMemo(()=>({
         darkMode, toggleTheme
-    }),[darkMode])
+    }),[darkMode,toggleTheme])
     return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
