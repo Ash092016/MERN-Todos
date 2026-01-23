@@ -47,6 +47,10 @@ router.post('/signup',async (req,res,next)=>{
                 token:generateToken(user._id),
             })
         }
+        else{
+            res.status(500)
+            throw new Error('Failed to create user')
+        }
     }
     catch(error){
         next(error)
