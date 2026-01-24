@@ -49,9 +49,9 @@ const Signup=()=>{
     }
 
     return (
-        <div className='min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 transition-colors duration-300'>
-            <div className='max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 transform transition-all'>
-                <h2 className='text-3xl font-extrabold text-center text-gray-900 dark:text-white mb-2'>Create Account</h2>
+        <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-4 py-12 transition-all duration-500'>
+            <div className='max-w-md w-full bg-white/95 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-10 border border-white/20 transform transition-all hover:scale-[1.01]'>
+                <h2 className='text-4xl font-black tracking-tight text-gray-900 dark:text-white mb-3'>Create Account</h2>
                 <p className='text-center text-gray-500 dark:text-gray-400 mb-8'>Join us to start managing your tasks</p>
                 {error && (
                     <div className='bg-red-50 dark:bg-red-900/30 border-l-4 border-red-500 text-red-700 dark:text-red-400 p-4 rounded mb-6 animate-shake'>
