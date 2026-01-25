@@ -1,0 +1,16 @@
+name: Keep Backend Alive
+
+on:
+  schedule:
+    # Runs every 14 minutes (Vercel functions sleep after ~15 mins of inactivity)
+    - cron: '*/14 * * * *' 
+  workflow_dispatch: # Allows you to trigger it manually from GitHub Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Backend Health Endpoint
+        run: |
+          curl -s https://mern-todos-iegh.vercel.app/api/health
+          echo "Backend pinged successfully at $(date)"
