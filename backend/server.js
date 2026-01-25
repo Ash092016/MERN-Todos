@@ -16,15 +16,33 @@ connectDB()
 //Initializing express app
 const app = express()
 
-//Global Middleware
+const allowedOrigins = [
+    process.env.ALLOWED_ORIGIN, // Uses the variable you set in Vercel
+    'http://localhost:5173',
+    'http://localhost:3000'
+];
+
 app.use(cors({
-    origin: [
-        'https://mern-todos-theta.vercel.app',
-        'http://mern-todos-theta.vercel.app',
-        'http://localhost:5173',
-        'http://localhost:3000'
-    ],
-    credentials: true
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        const isAllowed = allowedOrigins.some(allowed => {
+            if (!allowed) return false;
+            // Handle both exact match and trailing slash differences
+            return origin.replace(/\/$/, '') === allowed.replace(/\/$/, '');
+        });
+
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    credentials: true,
+    optionsSuccessStatus: 200
 }))
 app.use(express.json())
 
