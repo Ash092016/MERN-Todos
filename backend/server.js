@@ -18,7 +18,13 @@ const app = express()
 
 //Global Middleware
 app.use(cors({
-    origin: process.env.ALLOWED_ORIGIN || '*'
+    origin: [
+        'https://mern-todos-theta.vercel.app',
+        'http://mern-todos-theta.vercel.app',
+        'http://localhost:5173',
+        'http://localhost:3000'
+    ],
+    credentials: true
 }))
 app.use(express.json())
 
